@@ -4,6 +4,7 @@ import { buttonVariants } from "./ui/button";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { twMerge } from "tailwind-merge";
+import { ThemeSwitch } from "./theme-switch";
 
 const Logo = () => {
   return (
@@ -59,7 +60,8 @@ const Header = () => {
           )}
         </div>
 
-        <div className="space-x-1">
+        <div className="flex space-x-1">
+          <ThemeSwitch />
           <a
             href=""
             className={buttonVariants({
