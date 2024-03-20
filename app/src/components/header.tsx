@@ -5,6 +5,7 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { twMerge } from "tailwind-merge";
 import { ThemeSwitch } from "./theme-switch";
+import React from "react";
 
 const Logo = () => {
   return (
@@ -16,28 +17,59 @@ const Logo = () => {
   );
 };
 
-const Header = () => {
-  const mobile = useMediaQuery("(max-width: 767px)");
+interface MobileNavProps {
+  show: boolean;
+}
+
+const navLinks = [{ name: "All Gists", href: "/discover" }];
+
+const MobileNav: React.FC<MobileNavProps> = ({ show }) => {
+  if (!show) {
+    return <></>;
+  }
 
   return (
     <>
-      <div
-        className={twMerge(
-          "font-semibold",
-          "container p-4 flex items-center gap-2",
-          "bg-slate-100 text-[#161b22]",
-          "dark:bg-[#161b22] dark:text-white"
-        )}
-      >
+      <div className="px-[1em] space-y-2 py-2">
+        <Input type="text" placeholder="Search..." className="h-8 outline-1" />
+        <nav className="flex flex-col gap-1 divide-y-[1px]">
+          {navLinks.map((link, idx) => (
+            <a href={link.href} key={idx} className="p-2 hover:bg-slate-300/30">
+              {link.name}
+            </a>
+          ))}
+        </nav>
+      </div>
+    </>
+  );
+};
+
+const Header = () => {
+  const mobile = useMediaQuery("(max-width: 767px)");
+
+  const [showNav, setShowNav] = React.useState(false);
+
+  return (
+    <div
+      className={twMerge(
+        "font-semibold max-md:font-medium",
+        "bg-slate-50 text-[#161b22]",
+        "dark:bg-[#161b22] dark:text-white"
+      )}
+    >
+      <div className="container p-4 flex items-center gap-2">
         {/* >768px logo */}
 
         {!mobile ? (
-          <a href="">
+          <a href="/">
             <Logo />
           </a>
         ) : (
           <>
-            <HamburgerMenuIcon className="w-6 h-8 cursor-pointer" />
+            <HamburgerMenuIcon
+              className="w-6 h-8 cursor-pointer"
+              onClick={() => setShowNav(!showNav)}
+            />
           </>
         )}
 
@@ -45,7 +77,11 @@ const Header = () => {
           {/* >768px nav */}
           {!mobile && (
             <div className="flex gap-4 items-center">
-              <Input placeholder="Search..." className="w-[16rem] h-10" />
+              <Input
+                type="text"
+                placeholder="Search..."
+                className="w-[16rem] h-10 outline-none"
+              />
               <nav>
                 <a href="">All gists</a>
               </nav>
@@ -54,7 +90,7 @@ const Header = () => {
 
           {/* <768px logo */}
           {mobile && (
-            <a href="">
+            <a href="/">
               <Logo />
             </a>
           )}
@@ -63,9 +99,9 @@ const Header = () => {
         <div className="flex space-x-1">
           <ThemeSwitch />
           <a
-            href=""
+            href="/sign-in"
             className={buttonVariants({
-              variant: "outline",
+              variant: "ghost",
               size: "sm",
               className: "font-semibold",
             })}
@@ -73,9 +109,9 @@ const Header = () => {
             Sign In
           </a>
           <a
-            href=""
+            href="sign-up"
             className={buttonVariants({
-              variant: "default",
+              variant: "outline",
               size: "sm",
               className: "font-semibold",
             })}
@@ -84,7 +120,8 @@ const Header = () => {
           </a>
         </div>
       </div>
-    </>
+      <MobileNav show={showNav && mobile} />
+    </div>
   );
 };
 
