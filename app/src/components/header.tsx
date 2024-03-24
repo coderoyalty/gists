@@ -1,4 +1,3 @@
-import logo from "@/assets/refine_logo.png";
 import { Input } from "./ui/input";
 import { buttonVariants } from "./ui/button";
 import { useMediaQuery } from "@/hooks/use-media-query";
@@ -6,16 +5,7 @@ import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { twMerge } from "tailwind-merge";
 import { ThemeSwitch } from "./theme-switch";
 import React from "react";
-
-const Logo = () => {
-  return (
-    <>
-      <div className="logo w-16">
-        <img src={logo} alt="logo" />
-      </div>
-    </>
-  );
-};
+import Logo from "./logo";
 
 interface MobileNavProps {
   show: boolean;
