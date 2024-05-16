@@ -6,6 +6,7 @@ import { twMerge } from "tailwind-merge";
 import { ThemeSwitch } from "./theme-switch";
 import React from "react";
 import Logo from "./logo";
+import { Link } from "react-router-dom";
 
 interface MobileNavProps {
   show: boolean;
@@ -24,9 +25,13 @@ const MobileNav: React.FC<MobileNavProps> = ({ show }) => {
         <Input type="text" placeholder="Search..." className="h-8 outline-1" />
         <nav className="flex flex-col gap-1 divide-y-[1px]">
           {navLinks.map((link, idx) => (
-            <a href={link.href} key={idx} className="p-2 hover:bg-slate-300/30">
+            <Link
+              to={link.href}
+              key={idx}
+              className="p-2 hover:bg-slate-300/30"
+            >
               {link.name}
-            </a>
+            </Link>
           ))}
         </nav>
       </div>
@@ -51,9 +56,9 @@ const Header = () => {
         {/* >768px logo */}
 
         {!mobile ? (
-          <a href="/">
+          <Link to="/">
             <Logo />
-          </a>
+          </Link>
         ) : (
           <>
             <HamburgerMenuIcon
@@ -80,16 +85,16 @@ const Header = () => {
 
           {/* <768px logo */}
           {mobile && (
-            <a href="/">
+            <Link to="/">
               <Logo />
-            </a>
+            </Link>
           )}
         </div>
 
         <div className="flex space-x-1">
           <ThemeSwitch />
-          <a
-            href="/sign-in"
+          <Link
+            to="/login"
             className={buttonVariants({
               variant: "ghost",
               size: "sm",
@@ -97,9 +102,9 @@ const Header = () => {
             })}
           >
             Sign In
-          </a>
-          <a
-            href="sign-up"
+          </Link>
+          <Link
+            to="/signup"
             className={buttonVariants({
               variant: "outline",
               size: "sm",
@@ -107,7 +112,7 @@ const Header = () => {
             })}
           >
             Sign Up
-          </a>
+          </Link>
         </div>
       </div>
       <MobileNav show={showNav && mobile} />

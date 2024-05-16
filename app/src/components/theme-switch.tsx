@@ -4,7 +4,7 @@ import React from "react";
 
 type ThemeType = "dark" | "light";
 
-export function ThemeSwitch() {
+export function ThemeSwitch({ render = true }) {
   const [theme, setTheme] = React.useState<ThemeType>(
     (localStorage.getItem("theme") as ThemeType) ?? "light"
   );
@@ -15,6 +15,10 @@ export function ThemeSwitch() {
     const body = document.querySelector("html")!;
     body.classList.toggle("dark", theme === "dark");
   }, [theme]);
+
+  if (!render) {
+    return <></>;
+  }
 
   return (
     <>
