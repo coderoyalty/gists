@@ -4,6 +4,8 @@ import Header from "./components/header";
 import Home from "./pages/home";
 import { LoginPage, SignupPage } from "./pages/auth-page";
 import { ThemeSwitch } from "./components/theme-switch";
+import { AppContextProvider } from "./contexts/app.context";
+import { Toaster } from "./components/ui/toaster";
 
 function Root() {
   return (
@@ -20,6 +22,7 @@ const routers = createBrowserRouter([
     element: (
       <>
         <ThemeSwitch render={false} />
+        <Toaster />
         <Outlet />
       </>
     ),
@@ -41,7 +44,11 @@ const routers = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={routers} />;
+  return (
+    <AppContextProvider>
+      <RouterProvider router={routers} />
+    </AppContextProvider>
+  );
 }
 
 export default App;
