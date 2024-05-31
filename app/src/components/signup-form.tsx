@@ -33,7 +33,7 @@ export function SignupForm() {
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {};
+  const onSubmit = async (_: z.infer<typeof formSchema>) => {};
 
   return (
     <Form {...form}>
