@@ -7,6 +7,7 @@ import { ThemeSwitch } from "./theme-switch";
 import React from "react";
 import Logo from "./logo";
 import { Link } from "react-router-dom";
+import { useAppContext } from "@/contexts/app.context";
 
 interface MobileNavProps {
   show: boolean;
@@ -40,6 +41,7 @@ const MobileNav: React.FC<MobileNavProps> = ({ show }) => {
 };
 
 const Header = () => {
+  const { signedIn } = useAppContext();
   const mobile = useMediaQuery("(max-width: 767px)");
 
   const [showNav, setShowNav] = React.useState(false);
@@ -93,26 +95,30 @@ const Header = () => {
 
         <div className="flex space-x-1">
           <ThemeSwitch />
-          <Link
-            to="/login"
-            className={buttonVariants({
-              variant: "ghost",
-              size: "sm",
-              className: "font-semibold",
-            })}
-          >
-            Sign In
-          </Link>
-          <Link
-            to="/signup"
-            className={buttonVariants({
-              variant: "outline",
-              size: "sm",
-              className: "font-semibold",
-            })}
-          >
-            Sign Up
-          </Link>
+          {!signedIn && (
+            <>
+              <Link
+                to="/login"
+                className={buttonVariants({
+                  variant: "ghost",
+                  size: "sm",
+                  className: "font-semibold",
+                })}
+              >
+                Sign In
+              </Link>
+              <Link
+                to="/signup"
+                className={buttonVariants({
+                  variant: "outline",
+                  size: "sm",
+                  className: "font-semibold",
+                })}
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
       </div>
       <MobileNav show={showNav && mobile} />

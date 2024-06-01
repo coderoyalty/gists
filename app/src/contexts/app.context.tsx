@@ -5,6 +5,7 @@ import React from "react";
 interface IAppContext {
   email: string;
   session: Session | null;
+  signedIn: boolean;
 }
 
 interface IAppContextProvider {
@@ -14,6 +15,7 @@ interface IAppContextProvider {
 const AppContext = React.createContext({} as IAppContext);
 
 const AppContextProvider: React.FC<IAppContextProvider> = ({ children }) => {
+  const [signedIn, setSignedIn] = React.useState(false);
   const [session, setSession] = React.useState<Session | null>(null);
   const [email, _setEmail] = React.useState<string>("");
 
@@ -33,11 +35,17 @@ const AppContextProvider: React.FC<IAppContextProvider> = ({ children }) => {
     };
   }, []);
 
-  return (
-    <AppContext.Provider value={{ email, session }}>
-      {children}
-    </AppContext.Provider>
-  );
+  React.useEffect(() => {
+    if (session) {
+      setSignedIn(true);
+    } else {
+      setSignedIn(false);
+    }
+  }, [session]);
+
+  const value = { email, session, signedIn };
+
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
 
 const useAppContext = () => React.useContext(AppContext);

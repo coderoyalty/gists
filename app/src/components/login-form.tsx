@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Form,
   FormControl,
@@ -22,14 +22,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import supabase from "@/supabase-client";
 import { useToast } from "@/components/ui/use-toast";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
+import { useEffect } from "react";
+import { useAppContext } from "@/contexts/app.context";
 const formSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
 });
 
 export function LoginForm() {
+  const { session } = useAppContext();
   const { toast } = useToast();
-
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -37,6 +40,14 @@ export function LoginForm() {
       password: "",
     },
   });
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (session) {
+        navigate("/");
+      }
+    }, 500);
+  }, [session]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
@@ -50,6 +61,13 @@ export function LoginForm() {
           description: `${error.message} 😿`,
           variant: "destructive",
         });
+      } else {
+        toast({
+          title: "Hurray 🎉",
+          description: "Signed In successfully 💃",
+        });
+
+        navigate("/");
       }
     } catch (err) {
     } finally {
@@ -142,6 +160,7 @@ export function LoginForm() {
                 type="button"
                 variant="outline"
                 className="w-full"
+                disabled
                 onClick={() => handleOAuthLogin("github")}
               >
                 <GitHubLogoIcon className="mr-2 w-5 h-5" />

@@ -8,12 +8,16 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Form, FormField, FormLabel, FormMessage } from "./ui/form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
+import { useToast } from "./ui/use-toast";
+import { createUser } from "@/api/auth";
+import { useAppContext } from "@/contexts/app.context";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -23,6 +27,10 @@ const formSchema = z.object({
 });
 
 export function SignupForm() {
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  const { session } = useAppContext();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -33,7 +41,39 @@ export function SignupForm() {
     },
   });
 
-  const onSubmit = async (_: z.infer<typeof formSchema>) => {};
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      const val = await createUser(values);
+      if (val) {
+        toast({
+          title: "Hurray 🎉",
+          description: "Account created successfully.",
+        });
+
+        navigate("/login");
+      } else {
+        toast({
+          title: "Uh-Oh 😿",
+          description: "We were unable to your create account.",
+        });
+      }
+    } catch (err) {
+      toast({
+        title: "Error ⚠",
+        description: "Couldn't sign-up",
+      });
+    } finally {
+      form.reset();
+    }
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (session) {
+        navigate("/");
+      }
+    }, 500);
+  }, [session]);
 
   return (
     <Form {...form}>
@@ -103,7 +143,12 @@ export function SignupForm() {
               <Button type="submit" className="w-full">
                 Create an account
               </Button>
-              <Button type="button" variant="outline" className="w-full">
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                disabled
+              >
                 <GitHubLogoIcon className="mr-2 w-5 h-5" />
                 Sign up with GitHub
               </Button>
