@@ -1,12 +1,15 @@
 import { Input } from "./ui/input";
-import { buttonVariants } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { twMerge } from "tailwind-merge";
 import { ThemeSwitch } from "./theme-switch";
 import React from "react";
 import Logo from "./logo";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAppContext } from "@/contexts/app.context";
+import supabase from "@/supabase-client";
+import { useToast } from "./ui/use-toast";
 
 interface MobileNavProps {
   show: boolean;
@@ -40,9 +43,26 @@ const MobileNav: React.FC<MobileNavProps> = ({ show }) => {
 };
 
 const Header = () => {
+  const { signedIn } = useAppContext();
+  const { toast } = useToast();
+  const navigate = useNavigate();
   const mobile = useMediaQuery("(max-width: 767px)");
 
   const [showNav, setShowNav] = React.useState(false);
+
+  const onSignOut = async () => {
+    try {
+      await supabase.auth.signOut();
+
+      setTimeout(() => {
+        navigate(0);
+      }, 500);
+    } catch (err) {
+      toast({
+        description: "Couldn't sign the current session out",
+      });
+    }
+  };
 
   return (
     <div
@@ -93,26 +113,42 @@ const Header = () => {
 
         <div className="flex space-x-1">
           <ThemeSwitch />
-          <Link
-            to="/login"
-            className={buttonVariants({
-              variant: "ghost",
-              size: "sm",
-              className: "font-semibold",
-            })}
-          >
-            Sign In
-          </Link>
-          <Link
-            to="/signup"
-            className={buttonVariants({
-              variant: "outline",
-              size: "sm",
-              className: "font-semibold",
-            })}
-          >
-            Sign Up
-          </Link>
+          {!signedIn ? (
+            <>
+              <Link
+                to="/login"
+                className={buttonVariants({
+                  variant: "ghost",
+                  size: "sm",
+                  className: "font-semibold",
+                })}
+              >
+                Sign In
+              </Link>
+              <Link
+                to="/signup"
+                className={buttonVariants({
+                  variant: "outline",
+                  size: "sm",
+                  className: "font-semibold",
+                })}
+              >
+                Sign Up
+              </Link>
+            </>
+          ) : (
+            <>
+              <Button
+                onClick={(_) => {
+                  onSignOut();
+                }}
+                variant={"outline"}
+                size={"sm"}
+              >
+                Sign out
+              </Button>
+            </>
+          )}
         </div>
       </div>
       <MobileNav show={showNav && mobile} />

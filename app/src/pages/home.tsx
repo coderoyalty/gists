@@ -1,4 +1,3 @@
-import CodeBlock from "@/components/code-block";
 import { CubeIcon } from "@radix-ui/react-icons";
 
 const GistDetailIntro = () => {
@@ -30,24 +29,8 @@ const GistHead = () => {
   );
 };
 
-const content = `const CodeBlock: React.FC<CodeBlockProps> = ({ content }) => {
-  return (
-    <CBProvider>
-      <div className="p-1 mx-auto max-w-3xl">
-        <CodeBlockToolKit />
-        <CodePreview content={content} />
-      </div>
-    </CBProvider>
-  );
-};
-`;
-
 const GistBody = () => {
-  return (
-    <div className="space-y-2">
-      <CodeBlock content={content} />
-    </div>
-  );
+  return <div className="space-y-2"></div>;
 };
 
 const Home = () => {
