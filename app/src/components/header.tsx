@@ -43,7 +43,7 @@ const MobileNav: React.FC<MobileNavProps> = ({ show }) => {
 };
 
 const Header = () => {
-  const { signedIn } = useAppContext();
+  const { isAuthenticated } = useAppContext();
   const { toast } = useToast();
   const navigate = useNavigate();
   const mobile = useMediaQuery("(max-width: 767px)");
@@ -113,7 +113,7 @@ const Header = () => {
 
         <div className="flex space-x-1">
           <ThemeSwitch />
-          {!signedIn ? (
+          {!isAuthenticated ? (
             <>
               <Link
                 to="/login"

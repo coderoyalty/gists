@@ -1,3 +1,4 @@
+import GistForm from "@/components/gists/gist-form";
 import { CubeIcon } from "@radix-ui/react-icons";
 
 const GistDetailIntro = () => {
@@ -30,7 +31,11 @@ const GistHead = () => {
 };
 
 const GistBody = () => {
-  return <div className="space-y-2"></div>;
+  return (
+    <div className="space-y-2">
+      <GistForm />
+    </div>
+  );
 };
 
 const Home = () => {

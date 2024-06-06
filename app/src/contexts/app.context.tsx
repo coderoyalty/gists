@@ -5,7 +5,7 @@ import React from "react";
 interface IAppContext {
   email: string;
   session: Session | null;
-  signedIn: boolean;
+  isAuthenticated: boolean;
 }
 
 interface IAppContextProvider {
@@ -15,7 +15,7 @@ interface IAppContextProvider {
 const AppContext = React.createContext({} as IAppContext);
 
 const AppContextProvider: React.FC<IAppContextProvider> = ({ children }) => {
-  const [signedIn, setSignedIn] = React.useState(false);
+  const [isAuthenticated, setAuthenticated] = React.useState(false);
   const [session, setSession] = React.useState<Session | null>(null);
   const [email, _setEmail] = React.useState<string>("");
 
@@ -37,13 +37,13 @@ const AppContextProvider: React.FC<IAppContextProvider> = ({ children }) => {
 
   React.useEffect(() => {
     if (session) {
-      setSignedIn(true);
+      setAuthenticated(true);
     } else {
-      setSignedIn(false);
+      setAuthenticated(false);
     }
   }, [session]);
 
-  const value = { email, session, signedIn };
+  const value = { email, session, isAuthenticated };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
