@@ -1,6 +1,7 @@
 import supabase from "@/supabase-client";
 import { Session } from "@supabase/supabase-js";
 import React from "react";
+import { AuthContextProvider } from "./auth.context";
 
 interface IAppContext {
   email: string;
@@ -45,7 +46,11 @@ const AppContextProvider: React.FC<IAppContextProvider> = ({ children }) => {
 
   const value = { email, session, isAuthenticated };
 
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+  return (
+    <AppContext.Provider value={value}>
+      <AuthContextProvider>{children}</AuthContextProvider>
+    </AppContext.Provider>
+  );
 };
 
 const useAppContext = () => React.useContext(AppContext);
