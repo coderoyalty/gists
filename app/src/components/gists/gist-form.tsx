@@ -19,6 +19,9 @@ import {
   FormLabel,
 } from "../ui/form";
 import TypingAnimation from "../utils/typing-animation";
+import supabase from "@/supabase-client";
+import { useAuthContext } from "@/contexts/auth.context";
+import { useToast } from "../ui/use-toast";
 
 const formSchema = z.object({
   content: z
@@ -38,6 +41,8 @@ const formSchema = z.object({
 
 const GistForm = () => {
   const { isAuthenticated } = useAppContext();
+  const { user } = useAuthContext();
+  const { toast } = useToast();
 
   type FormSchema = z.infer<typeof formSchema>;
 
@@ -52,7 +57,41 @@ const GistForm = () => {
 
   const watchedContent = form.watch("content");
 
-  const onSubmit = (_: FormSchema) => {};
+  const onSubmit = async (values: FormSchema) => {
+    if (!isAuthenticated) {
+      return;
+    }
+
+    const { error } = await supabase.from("gists").insert([
+      {
+        owner_id: user?.id,
+        content: values.content,
+        title: values.title,
+        secret: values.secret,
+      },
+    ]);
+
+    if (error) {
+      toast({
+        title: "Uh-oh 😓",
+        description: "Unable to create gist, please try again!",
+      });
+
+      console.log(error);
+      return;
+    } else {
+      toast({
+        title: "Hurray! 🎉",
+        description: "Your gist was created successfully.",
+      });
+    }
+
+    form.reset({
+      title: "",
+      content: "",
+      secret: false,
+    });
+  };
 
   if (!isAuthenticated) {
     return <></>;
