@@ -42,12 +42,10 @@ const Home = () => {
   return (
     <main className="container min-h-screen dark:text-white">
       <div className="pt-6 pb-4">
-        <GistDetailIntro />
-        <GistHead />
         <GistBody />
       </div>
     </main>
   );
 };
 
-export default Home;
+export { Home as default, GistDetailIntro, GistHead };

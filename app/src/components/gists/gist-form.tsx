@@ -18,6 +18,7 @@ import {
   FormMessage,
   FormLabel,
 } from "../ui/form";
+import TypingAnimation from "../utils/typing-animation";
 
 const formSchema = z.object({
   content: z
@@ -63,7 +64,10 @@ const GistForm = () => {
         <Card className="mx-auto">
           <CardHeader>
             <h1 className="text-xl text-center">
-              Instantly Share Notes and Snippets.
+              <TypingAnimation
+                text="Instantly Share Notes and Snippets."
+                duration={100}
+              />
             </h1>
           </CardHeader>
           <CardContent className="space-y-3">
