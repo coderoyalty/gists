@@ -20,3 +20,29 @@
 
 5. **Initial Setup and Home Page Refactor**
    - Set up the initial frontend project, added key components, and refactored the home page for better structure and maintainability [commit `fb93665`, `4c8c180`](https://github.com/coderoyalty/gist-form/commit/fb936658d57cdbfa791debedf6f2ca6ca9ade5b8).
+
+## 2024-06-08 - Added Gist Posting Form
+
+### Objective
+
+Implement a form for posting gists to enhance user functionality.
+
+### Work Done
+
+- Created a new form component for posting gists.
+- Added logic to handle form submission and data validation.
+
+### Decisions Made
+
+- Chose to use `react-hook-form` for form management due to its simplicity and performance benefits.
+- Decided to validate form inputs on the client side to provide immediate feedback to users.
+
+### Challenges
+
+- Encountered issues with form validation logic; resolved by consulting `react-hook-form` documentation and examples.
+
+### Next Steps
+
+- create a page to discover new posted gists
+- create a gist preview page, where interactions can take place.
+- implement branch protection by preventing failed pull requests to merge unto the main branch.
