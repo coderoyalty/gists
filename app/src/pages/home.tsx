@@ -1,3 +1,4 @@
+import GistForm from "@/components/gists/gist-form";
 import { CubeIcon } from "@radix-ui/react-icons";
 
 const GistDetailIntro = () => {
@@ -30,19 +31,21 @@ const GistHead = () => {
 };
 
 const GistBody = () => {
-  return <div className="space-y-2"></div>;
+  return (
+    <div className="space-y-2">
+      <GistForm />
+    </div>
+  );
 };
 
 const Home = () => {
   return (
     <main className="container min-h-screen dark:text-white">
       <div className="pt-6 pb-4">
-        <GistDetailIntro />
-        <GistHead />
         <GistBody />
       </div>
     </main>
   );
 };
 
-export default Home;
+export { Home as default, GistDetailIntro, GistHead };

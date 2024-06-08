@@ -10,6 +10,16 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAppContext } from "@/contexts/app.context";
 import supabase from "@/supabase-client";
 import { useToast } from "./ui/use-toast";
+import { useAuthContext } from "@/contexts/auth.context";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface MobileNavProps {
   show: boolean;
@@ -43,7 +53,8 @@ const MobileNav: React.FC<MobileNavProps> = ({ show }) => {
 };
 
 const Header = () => {
-  const { signedIn } = useAppContext();
+  const { isAuthenticated } = useAppContext();
+  const { user } = useAuthContext();
   const { toast } = useToast();
   const navigate = useNavigate();
   const mobile = useMediaQuery("(max-width: 767px)");
@@ -113,7 +124,7 @@ const Header = () => {
 
         <div className="flex space-x-1">
           <ThemeSwitch />
-          {!signedIn ? (
+          {!isAuthenticated ? (
             <>
               <Link
                 to="/login"
@@ -138,15 +149,38 @@ const Header = () => {
             </>
           ) : (
             <>
-              <Button
-                onClick={(_) => {
-                  onSignOut();
-                }}
-                variant={"outline"}
-                size={"sm"}
-              >
-                Sign out
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="overflow-hidden rounded-full"
+                  >
+                    <img
+                      src={
+                        user?.dp_url || "https://avatar.iran.liara.run/public"
+                      }
+                      className="w-9 h-9 rounded-full object-contain"
+                    />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>
+                    <div>@{user?.username}</div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>Profile</DropdownMenuItem>
+                  <DropdownMenuItem>Support</DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={(_) => {
+                      onSignOut();
+                    }}
+                  >
+                    Sign out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </>
           )}
         </div>
