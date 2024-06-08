@@ -1,5 +1,4 @@
 import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
-import * as Switch from "@radix-ui/react-switch";
 import React from "react";
 import { Button } from "./ui/button";
 
