@@ -12,19 +12,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Navigate to app directory
-        run: cd ./app
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Navigate to app directory
+        run: cd ./app
+        
       - name: Install dependencies
-        run: npm install
+        run: yarn install
 
       - name: Build project
-        run: npm run build
+        run: yarn build
         continue-on-error: true
 
       - name: Check build status
