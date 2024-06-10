@@ -5,12 +5,14 @@ interface TypingAnimationProps {
   className?: string;
   text: string;
   duration?: number;
+  as?: keyof JSX.IntrinsicElements;
 }
 
 const TypingAnimation: React.FC<TypingAnimationProps> = ({
   className,
   text,
   duration = 200,
+  as: Component = "span",
 }) => {
   const [displayedText, setDisplayedText] = React.useState("");
   const [count, setCount] = React.useState<number>(0);
@@ -28,19 +30,17 @@ const TypingAnimation: React.FC<TypingAnimationProps> = ({
     return () => {
       clearInterval(typingEffect);
     };
-  }, [duration, count]);
+  }, [duration, count, text, displayedText]);
 
   return (
-    <>
-      <span
-        className={cn(
-          "font-display tracking-[-0.02em] drop-shadow-sm",
-          className
-        )}
-      >
-        {displayedText ? displayedText : text}
-      </span>
-    </>
+    <Component
+      className={cn(
+        "font-display tracking-[-0.02em] drop-shadow-sm",
+        className
+      )}
+    >
+      {displayedText ? displayedText : text}
+    </Component>
   );
 };
 

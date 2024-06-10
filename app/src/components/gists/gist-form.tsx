@@ -102,12 +102,12 @@ const GistForm = () => {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Card className="mx-auto">
           <CardHeader>
-            <h1 className="text-xl text-center">
-              <TypingAnimation
-                text="Instantly Share Notes and Snippets."
-                duration={100}
-              />
-            </h1>
+            <TypingAnimation
+              as="h1"
+              className="text-xl text-center"
+              text="Instantly Share Notes and Snippets."
+              duration={100}
+            />
           </CardHeader>
           <CardContent className="space-y-3">
             <FormField
