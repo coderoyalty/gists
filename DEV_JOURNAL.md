@@ -46,3 +46,23 @@ Implement a form for posting gists to enhance user functionality.
 - create a page to discover new posted gists
 - create a gist preview page, where interactions can take place.
 - implement branch protection by preventing failed pull requests to merge unto the main branch.
+
+## 2024-06-11 - Added Discover page
+
+### Objective
+
+Implement a page to explore gists.
+
+### Work Done
+
+- Added a Discover page to explore gists.
+- Introduced a NotFound page for 404 errors.
+- Simplified App component structure.
+- Streamlined import statements and rendering logic in main.tsx.
+- Updated rendering logic and data handling in gist discovery to improve performance and reliability.
+
+### Next Steps
+
+- create a page for viewing each gists
+- show no. of comments in the discover page.
+- create a page for viewing a user profile.
