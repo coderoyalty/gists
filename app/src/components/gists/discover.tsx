@@ -133,7 +133,7 @@ const Discover = () => {
             <div className="mx-auto w-[80%] space-y-3 mt-2">
               <GistHead />
 
-              {gists.map((gist, idx) => (
+              {gists.map((gist) => (
                 <div key={gist.id}>
                   <div className="flex space-x-2">
                     <div>
