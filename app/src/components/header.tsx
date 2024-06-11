@@ -109,7 +109,7 @@ const Header = () => {
                 className="w-[16rem] h-10 outline-none"
               />
               <nav>
-                <a href="">All gists</a>
+                <Link to="/discover">All gists</Link>
               </nav>
             </div>
           )}
