@@ -134,7 +134,7 @@ const Discover = () => {
               <GistHead />
 
               {gists.map((gist, idx) => (
-                <div key={idx}>
+                <div key={gist.id}>
                   <div className="flex space-x-2">
                     <div>
                       <img
