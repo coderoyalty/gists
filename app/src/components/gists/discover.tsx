@@ -142,6 +142,7 @@ const Discover = () => {
                           gist.user.dp_url ||
                           "https://avatar.iran.liara.run/public"
                         }
+                        alt={`Profile picture of ${gist.user.username}`}
                         className="w-8 h-8 rounded-full object-contain"
                       />
                     </div>
