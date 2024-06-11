@@ -19,18 +19,9 @@ jobs:
 
       - name: Navigate to app directory
         run: cd ./app
-        
+
       - name: Install dependencies
         run: yarn install
 
       - name: Build project
         run: yarn build
-        continue-on-error: true
-
-      - name: Check build status
-        run: exit $?
-        if: ${{ failure() }}
-
-      - name: Prevent merging if build fails
-        run: echo "Build failed, preventing merge." && exit 1
-        if: ${{ failure() }}
