@@ -1,8 +1,5 @@
 import GistForm from "@/components/gists/gist-form";
 import { useAppContext } from "@/contexts/app.context";
-import useDebounce from "@/hooks/use-debounce";
-import React from "react";
-import { useNavigate } from "react-router";
 
 const GistBody = () => {
   return (
@@ -12,21 +9,30 @@ const GistBody = () => {
   );
 };
 
+const LandingPage = () => {
+  return (
+    <>
+      <section className="relative min-h-screen grid place-content-center overflow-hidden">
+        <div className="relative z-10 flex flex-col items-center">
+          <h1 className="max-w-3xl bg-gradient-to-br dark:from-white from-black to-gray-400 bg-clip-text text-center text-3xl font-medium leading-tight text-transparent sm:text-5xl sm:leading-tight md:text-7xl md:leading-tight">
+            Effortlessly Share Ideas, Notes and Snippets
+          </h1>
+          <p className="my-6 max-w-xl text-center text-base leading-relaxed md:text-lg md:leading-relaxed">
+            similar to a forum, but more informal.
+          </p>
+        </div>
+      </section>
+    </>
+  );
+};
+
 const Home = () => {
   const { isAuthenticated } = useAppContext();
-  const debounceLoggedIn = useDebounce(isAuthenticated, 1000);
-  const navigate = useNavigate();
-
-  React.useEffect(() => {
-    if (!debounceLoggedIn) {
-      navigate("/");
-    }
-  }, []);
 
   return (
     <main className="container min-h-screen dark:text-white">
       <div className="pt-6 pb-4">
-        <GistBody />
+        {isAuthenticated === false ? <LandingPage /> : <GistBody />}
       </div>
     </main>
   );
