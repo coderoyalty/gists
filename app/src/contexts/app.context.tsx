@@ -20,29 +20,29 @@ const AppContextProvider: React.FC<IAppContextProvider> = ({ children }) => {
   const [session, setSession] = React.useState<Session | null>(null);
   const [email, _setEmail] = React.useState<string>("");
 
-  React.useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
+  React.useLayoutEffect(() => {
+    supabase.auth
+      .getSession()
+      .then(({ data: { session } }) => {
+        setSession(session);
+        setAuthenticated(session ? true : false);
+      })
+      .catch(() => {
+        setSession(null);
+        setAuthenticated(false);
+      });
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
+      setAuthenticated(session ? true : false);
     });
 
     return () => {
       subscription.unsubscribe();
     };
   }, []);
-
-  React.useEffect(() => {
-    if (session) {
-      setAuthenticated(true);
-    } else {
-      setAuthenticated(false);
-    }
-  }, [session]);
 
   const value = { email, session, isAuthenticated };
 

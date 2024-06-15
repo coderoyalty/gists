@@ -22,6 +22,7 @@ import TypingAnimation from "../utils/typing-animation";
 import supabase from "@/supabase-client";
 import { useAuthContext } from "@/contexts/auth.context";
 import { useToast } from "../ui/use-toast";
+import { useNavigate } from "react-router";
 
 const formSchema = z.object({
   content: z
@@ -46,6 +47,8 @@ const GistForm = () => {
 
   type FormSchema = z.infer<typeof formSchema>;
 
+  const navigate = useNavigate();
+
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -62,14 +65,18 @@ const GistForm = () => {
       return;
     }
 
-    const { error } = await supabase.from("gists").insert([
-      {
-        owner_id: user?.id,
-        content: values.content,
-        title: values.title,
-        secret: values.secret,
-      },
-    ]);
+    const { data, error } = await supabase
+      .from("gists")
+      .insert([
+        {
+          owner_id: user?.id,
+          content: values.content,
+          title: values.title,
+          secret: values.secret,
+        },
+      ])
+      .select()
+      .single();
 
     if (error) {
       toast({
@@ -80,10 +87,12 @@ const GistForm = () => {
       console.log(error);
       return;
     } else {
+      console.log(data);
       toast({
         title: "Hurray! 🎉",
         description: "Your gist was created successfully.",
       });
+      navigate(`/${user?.username}/${data.id}`);
     }
 
     form.reset({
