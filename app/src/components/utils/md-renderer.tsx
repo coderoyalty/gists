@@ -17,25 +17,25 @@ const MarkdownRenderer: React.FC<MDRendererProps> = ({
       remarkPlugins={[remarkGfm]}
       components={{
         h1: ({ node, ...props }) => (
-          <h1 className="text-3xl font-bold mb-4" {...props} />
+          <h1 className="text-xl font-bold mb-4" {...props} />
         ),
         h2: ({ node, ...props }) => (
-          <h2 className="text-2xl font-semibold mb-3" {...props} />
+          <h2 className="text-lg font-semibold mb-3" {...props} />
         ),
         h3: ({ node, ...props }) => (
-          <h3 className="text-xl font-medium mb-2" {...props} />
+          <h3 className=" text-base font-medium mb-2" {...props} />
         ),
         h4: ({ node, ...props }) => (
-          <h4 className="text-lg font-medium mb-2" {...props} />
+          <h4 className="text-base font-medium mb-2" {...props} />
         ),
         h5: ({ node, ...props }) => (
-          <h5 className="text-md font-medium mb-2" {...props} />
+          <h5 className="text-sm font-medium mb-2" {...props} />
         ),
         h6: ({ node, ...props }) => (
           <h6 className="text-sm font-medium mb-2" {...props} />
         ),
         p: ({ node, ...props }) => (
-          <p className="mb-4 text-base leading-7" {...props} />
+          <p className="mb-4 text-sm leading-7 font-normal" {...props} />
         ),
         a: ({ node, ...props }) => (
           <a className="text-blue-600 hover:underline" {...props} />
@@ -49,13 +49,13 @@ const MarkdownRenderer: React.FC<MDRendererProps> = ({
         li: ({ node, ...props }) => <li className="mb-1" {...props} />,
         blockquote: ({ node, ...props }) => (
           <blockquote
-            className="border-l-4 border-gray-300 pl-4 italic text-gray-600 mb-4"
+            className="border-l-4 border-gray-300 pl-4 italic text-gray-600 mb-4 mx-auto max-w-[80%] max-md:max-w-full"
             {...props}
           />
         ),
         pre: ({ node, ...props }) => (
-          <pre className="dark:bg-white/20 bg-black/10 p-3 rounded mb-4">
-            <code {...props} />
+          <pre className="dark:bg-gray-700/20 bg-black/10 p-3 text-base font-mono rounded-md mb-4 mx-auto max-w-[80%] max-md:max-w-full overflow-auto">
+            <code {...props} className="font-normal" />
           </pre>
         ),
         table: ({ node, ...props }) => (
