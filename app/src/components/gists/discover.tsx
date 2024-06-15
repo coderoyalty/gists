@@ -149,14 +149,14 @@ const Discover = () => {
                     <div className="flex flex-col space-y-2">
                       <div>
                         <Link
-                          to=""
+                          to={`/${gist.user.username}`}
                           className="px-1 text-blue-500 hover:underline hover:text-blue-700"
                         >
                           {gist.user.username}
                         </Link>{" "}
                         /
                         <Link
-                          to=""
+                          to={`/${gist.user.username}/${gist.id}`}
                           className="px-1 text-blue-500 hover:underline hover:text-blue-700 text-ellipsis"
                         >
                           {gist.title}
