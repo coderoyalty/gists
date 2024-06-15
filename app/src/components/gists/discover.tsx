@@ -130,7 +130,7 @@ const Discover = () => {
 
         {!isLoading && (
           <>
-            <div className="mx-auto w-[80%] space-y-3 mt-2">
+            <div className="mx-auto w-[80%] space-y-5 mt-2">
               <GistHead />
 
               {gists.map((gist) => (

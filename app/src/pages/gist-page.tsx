@@ -3,52 +3,47 @@ import { Skeleton } from "@/components/ui/skeleton";
 import MarkdownRenderer from "@/components/utils/md-renderer";
 import supabase from "@/supabase-client";
 import { QueryData } from "@supabase/supabase-js";
-import React from "react";
-import { useParams } from "react-router";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import useSWR from "swr";
 
-const gistWithUsernameQuery = supabase
-  .from("gists")
-  .select(`id, title, content, created_at, users!inner (username)`);
+const gistWithUsernameQuery = () =>
+  supabase
+    .from("gists")
+    .select(`id, title, content, created_at, users!inner (username)`);
 
 type GistWithUsername = Omit<
-  QueryData<typeof gistWithUsernameQuery>[number],
+  QueryData<ReturnType<typeof gistWithUsernameQuery>>[number],
   "users"
 > & {
-  users: QueryData<typeof gistWithUsernameQuery>[number]["users"][number];
+  users: QueryData<
+    ReturnType<typeof gistWithUsernameQuery>
+  >[number]["users"][number];
 };
 
 const GistPage = () => {
-  const { username, gist: gistId } = useParams();
+  const { username, gistId } = useParams();
 
-  const [gist, setGist] = React.useState<GistWithUsername | null>(null);
-  const [isLoading, setLoading] = React.useState(true);
+  const fetcher = async (): Promise<GistWithUsername> => {
+    const { data, error } = await gistWithUsernameQuery()
+      .eq("id", gistId)
+      .eq("users.username", username)
+      .single();
 
-  React.useEffect(() => {
-    const fetchGist = async () => {
-      try {
-        setLoading(true);
-        const { data, error } = await gistWithUsernameQuery
-          .eq("id", gistId)
-          .eq("users.username", username)
-          .single();
+    if (error) {
+      throw error;
+    }
 
-        if (error) {
-          setGist(null);
-        } else {
-          setGist(data as any);
-        }
-      } catch (error) {
-        setGist(null);
-      } finally {
-        setLoading(false);
-      }
-    };
+    return data as any;
+  };
 
-    fetchGist();
-  }, []);
+  const {
+    data: gist,
+    isLoading,
+    isValidating,
+    error,
+  } = useSWR([`gist-${gistId}-${username}`], fetcher);
 
-  if (isLoading && !gist) {
+  if (isLoading || isValidating) {
     return (
       <div className="mx-auto max-w-[80%] my-4 space-y-2">
         <div>
@@ -64,7 +59,9 @@ const GistPage = () => {
         </div>
       </div>
     );
-  } else if (!isLoading && gist == null) {
+  }
+
+  if (error) {
     return (
       <div className="flex flex-col min-h-[80vh] gap-4 justify-center items-center">
         <h1 className="text-7xl text-center">Oops</h1>

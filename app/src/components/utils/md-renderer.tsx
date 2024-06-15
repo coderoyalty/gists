@@ -58,18 +58,31 @@ const MarkdownRenderer: React.FC<MDRendererProps> = ({
             <code {...props} className="font-normal" />
           </pre>
         ),
+        code: ({ node, ...props }) => (
+          <code
+            {...props}
+            className="bg-gray-300 dark:bg-gray-900 p-1 rounded-md"
+          ></code>
+        ),
         table: ({ node, ...props }) => (
-          <table className="table-auto w-full mb-4" {...props} />
+          <table
+            className="table-auto mx-auto w-full max-w-[80%] max-md:max-w-full mb-4"
+            {...props}
+          />
         ),
         thead: ({ node, ...props }) => (
-          <thead className="bg-gray-200" {...props} />
+          <thead className="bg-gray-200 dark:bg-gray-800" {...props} />
         ),
         tbody: ({ node, ...props }) => (
-          <tbody className="bg-white" {...props} />
+          <tbody className="bg-white dark:bg-black" {...props} />
         ),
-        tr: ({ node, ...props }) => <tr className="border-b" {...props} />,
-        th: ({ node, ...props }) => <th className="px-4 py-2" {...props} />,
-        td: ({ node, ...props }) => <td className="px-4 py-2" {...props} />,
+        tr: ({ node, ...props }) => <tr className="border" {...props} />,
+        th: ({ node, ...props }) => (
+          <th className="px-4 py-2 border-2" {...props} />
+        ),
+        td: ({ node, ...props }) => (
+          <td className="px-4 py-2 border-2" {...props} />
+        ),
       }}
     >
       {content}

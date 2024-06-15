@@ -42,7 +42,7 @@ const routes: RouteObject[] = [
             element: <Discover />,
           },
           {
-            path: "/:username/:gist",
+            path: "/:username/:gistId",
             element: <GistPage />,
           },
         ],
