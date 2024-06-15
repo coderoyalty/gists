@@ -63,6 +63,23 @@ Implement a page to explore gists.
 
 ### Next Steps
 
-- create a page for viewing each gists
-- show no. of comments in the discover page.
+- create a page for viewing each gist
+- show no. of comments in the Discover page.
+- create a page for viewing a user profile.
+
+## 2024-06-14 - Create Gist Preview Page
+
+### Objective
+
+Implement a page for viewing gist. The link used is `/<owner_username>/<gist_id>`.
+
+### Work Done
+
+- create `routes.tsx` for configuring the application routing logic
+- add a landing page to the root path for unauthenticated user.
+- refactor markdown-renderer styling.
+
+### Next Steps
+
+- show no. of comments in the Discover page.
 - create a page for viewing a user profile.
