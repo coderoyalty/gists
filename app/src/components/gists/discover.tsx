@@ -5,6 +5,7 @@ import TypingAnimation from "../utils/typing-animation";
 import { Skeleton } from "../ui/skeleton";
 import { Link } from "react-router-dom";
 import MarkdownRenderer from "../utils/md-renderer";
+import * as timeago from "timeago.js";
 
 type User = {
   id: string;
@@ -163,12 +164,7 @@ const Discover = () => {
                         </Link>
                       </div>
                       <div>
-                        <span>
-                          Created:{" "}
-                          {new Date(
-                            gist.created_at || Date.now()
-                          ).toDateString()}
-                        </span>
+                        <span>{timeago.format(gist.created_at)}</span>
                       </div>
                     </div>
                   </div>
