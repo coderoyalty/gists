@@ -5,11 +5,14 @@ import supabase from "@/supabase-client";
 import { QueryData } from "@supabase/supabase-js";
 import { Link, useParams } from "react-router-dom";
 import useSWR from "swr";
+import * as timeago from "timeago.js";
 
 const gistWithUsernameQuery = () =>
   supabase
     .from("gists")
-    .select(`id, title, content, created_at, users!inner (username)`);
+    .select(
+      `id, title, content, created_at, updated_at, users!inner (username)`
+    );
 
 type GistWithUsername = Omit<
   QueryData<ReturnType<typeof gistWithUsernameQuery>>[number],
@@ -86,15 +89,25 @@ const GistPage = () => {
       <div className="mx-auto my-4 max-w-[80%] p-4 max-md:max-w-full font-medium text-xl space-y-3">
         <div className="space-y-2">
           <h1>{gist?.title}</h1>
-          <span className="text-gray-600 text-sm">
-            Created by
-            <Link
-              to={`/${gist?.users.username}`}
-              className="px-1 text-blue-500 hover:underline hover:text-blue-700"
-            >
-              @{gist?.users.username}
-            </Link>
-          </span>
+          <div className="text-sm text-gray-600">
+            <p className="">
+              Created by
+              <Link
+                to={`/${gist?.users.username}`}
+                className="px-1 text-blue-500 hover:underline hover:text-blue-700"
+              >
+                @{gist?.users.username}
+              </Link>
+            </p>
+            <span className="space-x-2">
+              <span className="text-gray-600">
+                {timeago.format(gist?.created_at)}
+              </span>
+              {gist?.updated_at != gist?.created_at && (
+                <span>Last Edited: {timeago.format(gist?.updated_at)}</span>
+              )}
+            </span>
+          </div>
         </div>
 
         <div className="mt-2 border p-4">
