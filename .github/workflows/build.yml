@@ -17,11 +17,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Navigate to app directory
-        run: cd ./app
-
       - name: Install dependencies
         run: yarn install
+        working-directory: ./app
 
       - name: Build project
         run: yarn build
+        working-directory: ./app
