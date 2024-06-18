@@ -1,3 +1,4 @@
+import CommentForm from "@/components/comment-form";
 import { buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import MarkdownRenderer from "@/components/utils/md-renderer";
@@ -113,6 +114,7 @@ const GistPage = () => {
         <div className="mt-2 border p-4">
           <MarkdownRenderer content={gist?.content} />
         </div>
+        <CommentForm />
       </div>
     </>
   );
