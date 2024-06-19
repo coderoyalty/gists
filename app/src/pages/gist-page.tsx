@@ -1,8 +1,11 @@
+import CommentForm from "@/components/comment-form";
 import { buttonVariants } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import MarkdownRenderer from "@/components/utils/md-renderer";
 import supabase from "@/supabase-client";
 import { QueryData } from "@supabase/supabase-js";
+import React from "react";
 import { Link, useParams } from "react-router-dom";
 import useSWR from "swr";
 import * as timeago from "timeago.js";
@@ -23,10 +26,10 @@ type GistWithUsername = Omit<
   >[number]["users"][number];
 };
 
-const GistPage = () => {
-  const { username, gistId } = useParams();
+const GistContainer = () => {
+  const { username, gistId = "" } = useParams();
 
-  const fetcher = async (): Promise<GistWithUsername> => {
+  const fetcher = async (): Promise<any> => {
     const { data, error } = await gistWithUsernameQuery()
       .eq("id", gistId)
       .eq("users.username", username)
@@ -36,36 +39,44 @@ const GistPage = () => {
       throw error;
     }
 
-    return data as any;
+    return data;
   };
 
-  const {
-    data: gist,
-    isLoading,
-    isValidating,
-    error,
-  } = useSWR([`gist-${gistId}-${username}`], fetcher);
+  const { data: gist, error: fetchError } = useSWR(
+    `gist-${gistId}-${username}`,
+    fetcher
+  );
 
-  if (isLoading || isValidating) {
-    return (
-      <div className="mx-auto max-w-[80%] my-4 space-y-2">
-        <div>
-          <Skeleton className="h-[50px]" />
-        </div>
-        <div>
-          <Skeleton className="h-[10px] w-20" />
-        </div>
-        <div>
-          <div className="mt-5">
-            <Skeleton className="min-h-[50vh]" />
-          </div>
+  return (
+    <GistPreview
+      gist={gist}
+      error={fetchError}
+      isLoading={!gist && !fetchError}
+    />
+  );
+};
+
+GistContainer.Skeleton = () => {
+  return (
+    <div className="mx-auto max-w-[80%] my-4 space-y-2">
+      <div>
+        <Skeleton className="h-[50px]" />
+      </div>
+      <div>
+        <Skeleton className="h-[10px] w-20" />
+      </div>
+      <div>
+        <div className="mt-5">
+          <Skeleton className="min-h-[50vh]" />
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+};
 
-  if (error) {
-    return (
+GistContainer.ErrorUI = () => {
+  return (
+    <>
       <div className="flex flex-col min-h-[80vh] gap-4 justify-center items-center">
         <h1 className="text-7xl text-center">Oops</h1>
         <h2 className="text-xl text-red-500">
@@ -81,41 +92,65 @@ const GistPage = () => {
           Go Home
         </Link>
       </div>
-    );
+    </>
+  );
+};
+
+type PreviewProps = {
+  gist: GistWithUsername | null;
+  isLoading: boolean;
+  error: any;
+};
+
+const GistPreview: React.FC<PreviewProps> = ({ gist, isLoading, error }) => {
+  if (isLoading) {
+    return <GistContainer.Skeleton />;
+  }
+
+  if (error || !gist) {
+    return <GistContainer.ErrorUI />;
   }
 
   return (
     <>
-      <div className="mx-auto my-4 max-w-[80%] p-4 max-md:max-w-full font-medium text-xl space-y-3">
+      <div className="mx-auto my-4 max-w-[80%] p-4 max-md:max-w-full font-medium text-xl space-y-5">
         <div className="space-y-2">
-          <h1>{gist?.title}</h1>
+          <h1>{gist.title}</h1>
           <div className="text-sm text-gray-600">
             <p className="">
               Created by
               <Link
-                to={`/${gist?.users.username}`}
+                to={`/${gist.users.username}`}
                 className="px-1 text-blue-500 hover:underline hover:text-blue-700"
               >
-                @{gist?.users.username}
+                @{gist.users.username}
               </Link>
             </p>
             <span className="space-x-2">
               <span className="text-gray-600">
-                {timeago.format(gist?.created_at)}
+                {timeago.format(gist.created_at)}
               </span>
-              {gist?.updated_at != gist?.created_at && (
-                <span>Last Edited: {timeago.format(gist?.updated_at)}</span>
+              {gist?.updated_at && gist.updated_at !== gist.created_at && (
+                <span>Last Edited: {timeago.format(gist.updated_at)}</span>
               )}
             </span>
           </div>
         </div>
 
         <div className="mt-2 border p-4">
-          <MarkdownRenderer content={gist?.content} />
+          <MarkdownRenderer content={gist.content} />
         </div>
+
+        <Separator className="h-1" />
+
+        <CommentForm gist_id={gist.id} />
       </div>
     </>
   );
+};
+
+const GistPage = () => {
+  return <GistContainer />;
 };
 
 export default GistPage;

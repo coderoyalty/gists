@@ -161,6 +161,11 @@ export function SignupForm() {
               Sign in
             </Link>
           </div>
+          <div className="mt-4 text-center text-sm">
+            <Link to="/" className="underline">
+              Go Home
+            </Link>
+          </div>
         </CardContent>
       </Card>
     </Form>

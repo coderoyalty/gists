@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import {
   Form,
   FormControl,
@@ -30,9 +30,14 @@ const formSchema = z.object({
 });
 
 export function LoginForm() {
+  const [searchParams] = useSearchParams();
+  const ref = searchParams.get("ref");
+
   const { session } = useAppContext();
+
   const { toast } = useToast();
   const navigate = useNavigate();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -44,7 +49,7 @@ export function LoginForm() {
   useEffect(() => {
     setTimeout(() => {
       if (session) {
-        navigate("/");
+        navigate(ref || "/");
       }
     }, 500);
   }, [session]);
@@ -67,7 +72,7 @@ export function LoginForm() {
           description: "Signed In successfully 💃",
         });
 
-        navigate("/");
+        navigate(ref || "/");
       }
     } catch (err) {
     } finally {
@@ -172,6 +177,11 @@ export function LoginForm() {
               Don&apos;t have an account?{" "}
               <Link to="/signup" className="underline">
                 Sign up
+              </Link>
+            </div>
+            <div className="mt-4 text-center text-sm">
+              <Link to="/" className="underline">
+                Go Home
               </Link>
             </div>
           </form>
