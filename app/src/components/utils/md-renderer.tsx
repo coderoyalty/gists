@@ -1,6 +1,7 @@
 import React from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeSanitize from "rehype-sanitize";
 
 interface MDRendererProps {
   content: string;
@@ -15,6 +16,7 @@ const MarkdownRenderer: React.FC<MDRendererProps> = ({
     <Markdown
       className={className}
       remarkPlugins={[remarkGfm]}
+      rehypePlugins={[rehypeSanitize]}
       components={{
         h1: ({ node, ...props }) => (
           <h1 className="text-xl font-bold mb-4" {...props} />
