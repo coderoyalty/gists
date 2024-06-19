@@ -2,8 +2,8 @@ import { useAuthContext } from "@/contexts/auth.context";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Textarea } from "./ui/textarea";
 import { Skeleton } from "./ui/skeleton";
-import { Link } from "react-router-dom";
-import { buttonVariants } from "./ui/button";
+import { Link, useLocation } from "react-router-dom";
+import { Button } from "./ui/button";
 import supabase from "@/supabase-client";
 
 type AddCommentProps = {
@@ -13,13 +13,17 @@ type AddCommentProps = {
 };
 
 const addComment = async ({ gist_id, user_id, content }: AddCommentProps) => {
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("comments")
-    .insert([{ gist_id, content, user_id }]);
+    .insert([{ gist_id, content, user_id }])
+    .select()
+    .single();
 
   if (error) {
     throw error;
   }
+
+  return data.id as string;
 };
 
 type CommentProps = {
@@ -29,30 +33,18 @@ type CommentProps = {
 const CommentForm: React.FC<CommentProps> = () => {
   const { user } = useAuthContext();
 
+  const location = useLocation();
+
   if (!user) {
     return (
       <>
-        <div className="my-4 p-4 bg-yellow-600/50 dark:bg-yellow-500/50 rounded-md">
+        <div className="my-4 py-8 bg-yellow-600/50 dark:bg-yellow-500/50 rounded-md">
           <div className="text-center">
-            <Link
-              to="/signup"
-              className={`${buttonVariants({
-                variant: "ghost",
-                size: "sm",
-                className: "font-semibold",
-              })} bg-green-600 dark:bg-green-600 hover:bg-green-700 dark:hover:bg-green-700`}
-            >
+            <Link to={`/signup?ref=${location.pathname}`} className="underline">
               Sign Up
             </Link>{" "}
             to join this conversation. Already have an account?{" "}
-            <Link
-              to="/login"
-              className={`${buttonVariants({
-                variant: "ghost",
-                size: "sm",
-                className: "font-semibold",
-              })} bg-green-600 dark:bg-green-600 hover:bg-green-700 dark:hover:bg-green-700`}
-            >
+            <Link to={`/login?ref=${location.pathname}`} className="underline">
               Sign In
             </Link>
           </div>
@@ -63,19 +55,19 @@ const CommentForm: React.FC<CommentProps> = () => {
 
   return (
     <>
-      <div className="relative max-w-[80%] mx-auto">
-        <div className="w-10 rounded-full absolute -left-12">
+      <div className="flex flex-col gap-1 max-w-sm sm:max-w-lg md:max-w-xl lg:max-w-3xl mx-auto">
+        <div className="mt-2 flex items-center gap-2">
           <img
             alt={`${user?.name}`}
             src={
               user?.dp_url ||
               "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
             }
-            className="w-full border-2 rounded-full object-contain"
+            className="w-10 border-2 rounded-full object-contain"
           />
-        </div>
-        <div className="mt-2">
           <h1>Add a comment</h1>
+        </div>
+        <div className="flex-auto">
           <div>
             <Tabs defaultValue="comment-write">
               <div className="mt-2">
@@ -96,6 +88,12 @@ const CommentForm: React.FC<CommentProps> = () => {
                 </TabsContent>
               </div>
             </Tabs>
+
+            <div className="md:flex md:justify-end mt-2 max-md:space-y-2">
+              <Button type="submit" className="max-md:w-full">
+                Create Gist
+              </Button>
+            </div>
           </div>
         </div>
       </div>
