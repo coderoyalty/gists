@@ -4,8 +4,29 @@ import { Textarea } from "./ui/textarea";
 import { Skeleton } from "./ui/skeleton";
 import { Link } from "react-router-dom";
 import { buttonVariants } from "./ui/button";
+import supabase from "@/supabase-client";
 
-const CommentForm = () => {
+type AddCommentProps = {
+  gist_id: string;
+  content: string;
+  user_id: string;
+};
+
+const addComment = async ({ gist_id, user_id, content }: AddCommentProps) => {
+  const { error } = await supabase
+    .from("comments")
+    .insert([{ gist_id, content, user_id }]);
+
+  if (error) {
+    throw error;
+  }
+};
+
+type CommentProps = {
+  gist_id: string;
+};
+
+const CommentForm: React.FC<CommentProps> = () => {
   const { user } = useAuthContext();
 
   if (!user) {
@@ -16,10 +37,10 @@ const CommentForm = () => {
             <Link
               to="/signup"
               className={`${buttonVariants({
-                variant: "default",
+                variant: "ghost",
                 size: "sm",
                 className: "font-semibold",
-              })} text-dark dark:text-white bg-green-600 dark:bg-green-600 hover:bg-green-700 dark:hover:bg-green-700`}
+              })} bg-green-600 dark:bg-green-600 hover:bg-green-700 dark:hover:bg-green-700`}
             >
               Sign Up
             </Link>{" "}
@@ -27,10 +48,10 @@ const CommentForm = () => {
             <Link
               to="/login"
               className={`${buttonVariants({
-                variant: "default",
+                variant: "ghost",
                 size: "sm",
                 className: "font-semibold",
-              })} text-dark dark:text-white bg-green-600 dark:bg-green-600 hover:bg-green-700 dark:hover:bg-green-700`}
+              })} bg-green-600 dark:bg-green-600 hover:bg-green-700 dark:hover:bg-green-700`}
             >
               Sign In
             </Link>
@@ -65,10 +86,13 @@ const CommentForm = () => {
               </div>
               <div className="space-y-3">
                 <TabsContent value="comment-write">
-                  <Textarea placeholder="type your comment here..." />
+                  <Textarea
+                    className="min-h-60"
+                    placeholder="type your comment here..."
+                  />
                 </TabsContent>
                 <TabsContent value="comment-preview">
-                  <Skeleton className="h-[250px]" />
+                  <Skeleton className="h-60" />
                 </TabsContent>
               </div>
             </Tabs>
