@@ -7,7 +7,7 @@ import { Toaster } from "./components/ui/toaster";
 import Discover from "./components/gists/discover";
 import NotFound from "./components/not-found";
 import GistPage from "./pages/gist-page";
-import Profile from "./pages/profile-page";
+import ProfilePage from "./pages/profile-page";
 
 function Root() {
   return (
@@ -42,7 +42,7 @@ const routes: RouteObject[] = [
             path: "/discover",
             element: <Discover />,
           },
-          { path: "/:username", element: <Profile /> },
+          { path: "/:username", element: <ProfilePage /> },
           {
             path: "/:username/:gistId",
             element: <GistPage />,
