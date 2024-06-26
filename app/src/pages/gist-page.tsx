@@ -1,4 +1,4 @@
-import CommentForm from "@/components/comment-form";
+import CommentContainer from "@/components/comments/comment-container";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -143,7 +143,7 @@ const GistPreview: React.FC<PreviewProps> = ({ gist, isLoading, error }) => {
 
         <Separator className="h-1" />
 
-        <CommentForm gist_id={gist.id} />
+        <CommentContainer gist_id={gist.id} />
       </div>
     </>
   );

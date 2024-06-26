@@ -23,11 +23,12 @@ import supabase from "@/supabase-client";
 import { useAuthContext } from "@/contexts/auth.context";
 import { useToast } from "../ui/use-toast";
 import { useNavigate } from "react-router";
+import React from "react";
 
 const formSchema = z.object({
   content: z
     .string()
-    .max(767, "Content must be less than 768 characters")
+    .max(2048, "Content must be less than 2048 characters")
     .refine((value) => value.trim().length > 0, {
       message: "Cannot be empty or whitespace",
     }),
@@ -57,6 +58,8 @@ const GistForm = () => {
       secret: false,
     },
   });
+
+  const [activeTab, setActiveTab] = React.useState<string>("write");
 
   const watchedContent = form.watch("content");
 
@@ -102,13 +105,18 @@ const GistForm = () => {
     });
   };
 
+  // set the tab value to `write` when the form validation failed.
+  const onInvalidHandler = () => {
+    setActiveTab("write");
+  };
+
   if (!isAuthenticated) {
     return <></>;
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit, onInvalidHandler)}>
         <Card className="mx-auto">
           <CardHeader>
             <TypingAnimation
@@ -131,7 +139,11 @@ const GistForm = () => {
               )}
             />
 
-            <Tabs defaultValue="write">
+            <Tabs
+              defaultValue="write"
+              value={activeTab}
+              onValueChange={setActiveTab}
+            >
               <TabsList>
                 <TabsTrigger value="write">Write</TabsTrigger>
                 <TabsTrigger value="preview">Preview</TabsTrigger>

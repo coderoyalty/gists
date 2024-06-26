@@ -1,44 +1,25 @@
 import { useAuthContext } from "@/contexts/auth.context";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { Textarea } from "./ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { Textarea } from "../ui/textarea";
 import { Link, useLocation } from "react-router-dom";
-import { Button } from "./ui/button";
-import supabase from "@/supabase-client";
+import { Button } from "../ui/button";
 
-import { Form, FormControl, FormField, FormItem } from "./ui/form";
+import { Form, FormControl, FormField, FormItem } from "../ui/form";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import MarkdownRenderer from "./utils/md-renderer";
-import { useToast } from "./ui/use-toast";
+import MarkdownRenderer from "../utils/md-renderer";
+import { useToast } from "../ui/use-toast";
+import { addComment } from ".";
 
 const formSchema = z.object({ content: z.string().trim().min(1) });
 
-type AddCommentProps = {
-  gist_id: string;
-  content: string;
-  user_id: string;
-};
-
-const addComment = async ({ gist_id, user_id, content }: AddCommentProps) => {
-  const { data, error } = await supabase
-    .from("comments")
-    .insert([{ gist_id, content, user_id }])
-    .select()
-    .single();
-
-  if (error) {
-    throw error;
-  }
-
-  return data.id as string;
-};
-
 type CommentProps = {
   gist_id: string;
+  pushComment?: (comment: any) => void;
 };
 
-const CommentForm: React.FC<CommentProps> = ({ gist_id }) => {
+const CommentForm: React.FC<CommentProps> = ({ gist_id, pushComment }) => {
   const { user } = useAuthContext();
   const { toast } = useToast();
   const location = useLocation();
@@ -70,7 +51,7 @@ const CommentForm: React.FC<CommentProps> = ({ gist_id }) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await addComment({
+      const data = await addComment({
         gist_id,
         user_id: user.id,
         content: values.content,
@@ -79,6 +60,9 @@ const CommentForm: React.FC<CommentProps> = ({ gist_id }) => {
       form.reset({ content: "" });
 
       toast({ title: "Yeah! 💪", description: "We've posted your comment" });
+      if (typeof pushComment == "function") {
+        pushComment(data);
+      }
     } catch (error: any) {
       toast({
         title: "Uh-oh 😓, Unable to add comment",
@@ -144,7 +128,7 @@ const CommentForm: React.FC<CommentProps> = ({ gist_id }) => {
 
             <div className="md:flex md:justify-end mt-2 max-md:space-y-2">
               <Button type="submit" className="max-md:w-full">
-                Create Gist
+                Comment
               </Button>
             </div>
           </div>
