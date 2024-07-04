@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 const ProfilePage = () => {
   const { username } = useParams();
 
-  return <>{username}</>;
+  return <>Username: {username}</>;
 };
 
 export default ProfilePage;
